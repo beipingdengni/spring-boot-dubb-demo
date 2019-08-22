@@ -1,0 +1,58 @@
+subprojects {
+
+
+    apply plugin: "idea"
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    configurations.all {
+        // check for updates every build [设置本地缓存的更新策略]
+        resolutionStrategy.cacheChangingModulesFor  10,'seconds'
+
+    }
+
+    repositories {
+        mavenLocal()
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/central/' }
+        mavenCentral()
+    }
+
+
+
+    ext {
+//        junitVersion = "4.11"
+//        springVersion = "4.3.3.RELEASE"
+//        jacksonVersion = "2.4.4"
+        compileJava.options.encoding = 'UTF-8'
+        compileTestJava.options.encoding = 'UTF-8'
+        springCloudVersion = 'Greenwich.SR2'
+
+        mavenUpload = false
+    }
+
+
+    group 'com.tian'
+    version '1.0-SNAPSHOT'
+
+
+//    buildscript {
+//        repositories {
+//            mavenLocal()
+//            maven { url 'http://maven.aliyun.com/nexus/content/repositories/central/' }
+//            mavenCentral()
+//        }
+//    }
+
+
+
+}
+
+

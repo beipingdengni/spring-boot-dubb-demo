@@ -1,0 +1,11 @@
+server:
+  port: 8091
+dubbo:
+  application:
+    name: dubbo-provider
+  provider:
+    timeout: 30000
+    retries: 0
+    version: 1.1.0
+  registry:
+    address: zookeeper://127.0.0.1:2181

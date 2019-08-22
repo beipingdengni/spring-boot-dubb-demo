@@ -1,0 +1,61 @@
+
+
+plugins {
+    id 'net.researchgate.release' version '2.6.0'
+}
+
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+
+// https://www.ctolib.com/mip/gradle-release.html
+
+//
+//ext {
+//    civersion = System.getProperty("ci-version") ?: "${project.version}"
+//    maven_username = System.env.maven_username
+//    maven_password = System.env.maven_password
+//}
+//
+//
+////upload war | jar to nexus
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            repository(url: "http://127.0.0.1:9998/nexus/content/repositories/releases") {
+//                authentication(userName: "${maven_username}", password: "${maven_password}")
+//            }
+//            pom.version = "${civersion}"
+//            pom.artifactId = "${project.archivesBaseName}"
+//            pom.groupId = "${project.group}"
+//        }
+//    }
+//}
+
+
+// config release task
+release {
+    tagCommitMessage = "[Gradle Release Plugin] - creating tag: "
+    scmAdapters = [
+            net.researchgate.release.GitAdapter,
+    ]
+}
+
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: 'http://myCompanyRepo.com:8081/releases') {
+                authentication(userName: 'admin', password: 'password')
+                releases(enabled:mavenUpload,updatePolicy:'interval:60',checksumPolicy:'warn')
+            }
+            snapshotRepository(url: 'http://myCompanyRepo.com:8081/snapshots') {
+                authentication(userName: 'admin', password: 'password')
+                snapshots(enabled:!mavenUpload,updatePolicy:'always',checksumPolicy:'warn')
+            }
+        }
+    }
+}
