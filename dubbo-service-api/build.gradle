@@ -17,8 +17,6 @@ uploadArchives {
                     authentication(userName: maven_username, password: maven_password)
                 }
             }
-
-
         }
     }
 }
