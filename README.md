@@ -71,3 +71,62 @@ archivesBaseName = 'gradle_api'
 mainClassName = "com.gradle.api.Main" //指定 Jar 启动 Main
 
 ```
+
+
+#### upload  jar 
+```text
+
+ext {
+    civersion = System.getProperty("ci-version") ?: "${project.version}"
+    maven_username = System.env.maven_username
+    maven_password = System.env.maven_password
+    
+    
+    System.getProperty("maven_username") //  gradle uploadArchives -Dmaven_username=admin
+    System.env.maven_username    //   gradle uploadArchives  需要机器中配置 [ export maven_username=admin ]
+}
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+//            pom.version = "${civersion}"
+//            pom.artifactId = "${project.archivesBaseName}"
+//            pom.groupId = "${project.group}"
+            if (mavenUpload){
+                pom.version = "${project.version}".replaceAll('SNAPSHOT','RELEASE')
+                repository(url: 'http://localhost:8081/repository/maven-releases/') {
+                    authentication(userName: 'admin', password: '123456')
+//                    releases(enabled:mavenUpload,updatePolicy:'interval:60',checksumPolicy:'warn')
+                }
+            }else {
+                snapshotRepository(url: 'http://localhost:8081/repository/maven-snapshots/') {
+                    authentication(userName: 'admin', password: '123456')
+//                    snapshots(enabled:!mavenUpload,updatePolicy:'always',checksumPolicy:'warn')
+                }
+            }
+        }
+    }
+}
+
+
+
+#### gradle-release 插件
+
+// https://www.ctolib.com/mip/gradle-release.html
+
+plugins {
+    id 'net.researchgate.release' version '2.6.0'
+}
+
+
+
+// config release task
+release {
+    tagCommitMessage = "[Gradle Release Plugin] - creating tag: "
+    scmAdapters = [
+            net.researchgate.release.GitAdapter,
+    ]
+}
+
+```

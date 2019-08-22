@@ -1,46 +1,46 @@
 subprojects {
 
-
     apply plugin: "idea"
     apply plugin: 'java'
     apply plugin: 'maven'
 
-
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    tasks.withType(JavaCompile) {
-        options.encoding = 'UTF-8'
-    }
-
     configurations.all {
-        // check for updates every build [设置本地缓存的更新策略]
-        resolutionStrategy.cacheChangingModulesFor  10,'seconds'
-
+        // check for updates every build [设置本地缓存的更新策略 seconds 、 minutes 、hours ]
+        resolutionStrategy.cacheChangingModulesFor 10, 'seconds'
     }
 
-    repositories {
-        mavenLocal()
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/central/' }
-        mavenCentral()
-    }
-
-
+    group 'com.tian'
+    version '1.1.0-SNAPSHOT'
 
     ext {
 //        junitVersion = "4.11"
 //        springVersion = "4.3.3.RELEASE"
 //        jacksonVersion = "2.4.4"
+
         compileJava.options.encoding = 'UTF-8'
         compileTestJava.options.encoding = 'UTF-8'
         springCloudVersion = 'Greenwich.SR2'
 
         mavenUpload = false
+        maven_version = System.getProperty("maven_version") ?: (mavenUpload ? "${project.version}".replaceAll('SNAPSHOT', 'RELEASE') : "${project.version}")
+        maven_username = System.getProperty("maven_username") ? System.getProperty("maven_username") : "admin"
+        maven_password = System.getProperty("maven_password") ? System.getProperty("maven_version") : "123456"
+
     }
 
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
 
-    group 'com.tian'
-    version '1.0-SNAPSHOT'
+    repositories {
+        mavenLocal()
+        maven { url 'https://maven.aliyun.com/repository/central' }
+        //http://maven.aliyun.com/nexus/content/groups/public/
+        mavenCentral()
+    }
 
 
 //    buildscript {
@@ -50,8 +50,6 @@ subprojects {
 //            mavenCentral()
 //        }
 //    }
-
-
 
 }
 
